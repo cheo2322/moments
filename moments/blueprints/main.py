@@ -10,8 +10,34 @@ from moments.models import Collection, Comment, Follow, Notification, Photo, Tag
 from moments.notifications import push_collect_notification, push_comment_notification
 from moments.utils import flash_errors, redirect_back, rename_image, resize_image, validate_image
 
+from azure.ai.vision.imageanalysis import ImageAnalysisClient
+from azure.ai.vision.imageanalysis.models import VisualFeatures
+from azure.core.credentials import AzureKeyCredential
+
+import os
+
 main_bp = Blueprint('main', __name__)
 
+try:
+    endpoint = os.getenv("AZURE_ENDPOINT")
+    azure_key = os.getenv("AZURE_KEY")
+except KeyError:
+    raise RuntimeError("undefined variable")
+
+client = ImageAnalysisClient(
+    endpoint=endpoint,
+    credential=AzureKeyCredential(azure_key)
+)
+
+visual_features =[
+        VisualFeatures.TAGS,
+        VisualFeatures.OBJECTS,
+        VisualFeatures.CAPTION,
+        VisualFeatures.DENSE_CAPTIONS,
+        VisualFeatures.READ,
+        VisualFeatures.SMART_CROPS,
+        VisualFeatures.PEOPLE,
+    ]
 
 @main_bp.route('/')
 def index():
@@ -155,7 +181,33 @@ def show_photo(photo_id):
     description_form = DescriptionForm()
     tag_form = TagForm()
 
+    if (photo.description == None):
+
+        # Analyze all visual features from an image stream. This will be a synchronously (blocking) call.
+        result = client.analyze_from_url(
+            image_url="https://raw.githubusercontent.com/cheo2322/mlip-api-lab/refs/heads/main/static/images/1.jpg",
+            visual_features=visual_features,
+            smart_crops_aspect_ratios=[0.9, 1.33],
+            gender_neutral_caption=True,
+            language="en"
+        )
+
+        new_description = ''
+
+        if result.caption is not None:
+            new_description = result.caption.text + " (Auto-generated caption by IA) "
+
+        if result.objects is not None:
+            for object in result.objects.list:
+                new_description += " #" + str(object.tags[0].name)
+
+            new_description += " (Auto-generated tags by IA)"
+
+        if new_description != '':
+            photo.description = new_description
+
     description_form.description.data = photo.description
+
     return render_template(
         'main/photo.html',
         photo=photo,
