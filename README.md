@@ -57,3 +57,38 @@ This project is licensed under the MIT License (see the
 - Install azure.ai.vision.imageanalysis
 - Set up your variables in the environment
 - The IA generated content will appear only with no-caption images
+
+
+# Notes for Production Deployment class
+
+Please check the commits made specifically for this class.
+
+Steps to deploy:
+
+- (Optional) Create a virtual environment with Python3
+- Install `requirements.txt` dependecies
+- Additionally, install `azure-cognitiveservices-vision-computervision` and `azure-ai-vision-imageanalysis`
+```bash
+$ pip install --upgrade azure-cognitiveservices-vision-computervision
+$ pip install azure-ai-vision-imageanalysis
+```
+- Init the app and run
+```bash
+$ flask init-app
+$ flask lorem
+$ flask run
+```
+![flask init-app](1.png)
+![flask lorem](3.png)
+![flask run](2.png)
+
+- The app will be open in port `5000` by default
+![app](image.png)
+
+- Let's use the credentials to login
+* email: `admin@helloflask.com`
+* password: `moments`
+![alt text](image-1.png)
+
+- Add a image by using the + sign in the top-right corner, select the image nad upload. Once done, open the image and check the content generated at the right of the picture
+![alt text](image-2.png)
