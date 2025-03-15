@@ -52,3 +52,8 @@ $ pdm run flask run
 
 This project is licensed under the MIT License (see the
 [LICENSE](LICENSE) file for details).
+
+# Important
+- Install azure.ai.vision.imageanalysis
+- Set up your variables in the environment
+- The IA generated content will appear only with no-caption images
