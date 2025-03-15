@@ -53,12 +53,6 @@ $ pdm run flask run
 This project is licensed under the MIT License (see the
 [LICENSE](LICENSE) file for details).
 
-# Important
-- Install azure.ai.vision.imageanalysis
-- Set up your variables in the environment
-- The IA generated content will appear only with no-caption images
-
-
 # Notes for Production Deployment class
 
 Please check the commits made specifically for this class.
@@ -66,6 +60,7 @@ Please check the commits made specifically for this class.
 Steps to deploy:
 
 - (Optional) Create a virtual environment with Python3
+- Set the variables AZURE_ENDPOINT and AZURE_KEY in your environment
 - Install `requirements.txt` dependecies
 - Additionally, install `azure-cognitiveservices-vision-computervision` and `azure-ai-vision-imageanalysis`
 ```bash
